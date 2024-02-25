@@ -5,25 +5,14 @@ import { Router } from 'express'
 import { randomUUID } from 'node:crypto'
 
 // Imports Project Modules
-import { validateMovie, validatePartialMovie } from './schemas/movies.js'
-import readJSON from '../utils.js'
-
-// Import data from movies.json
-const movies = readJSON('../movies.json')
+import { validateMovie, validatePartialMovie } from '../schemas/movies.js'
 
 // Initialize the Router
 export const moviesRouter = Router()
 
-moviesRouter.get('/', (req, res) => {
+moviesRouter.get('/', async (req, res) => {
 	const { genre } = req.query
-	if (genre) {
-		const filteredMovies = movies.filter((movie) =>
-			movie.genre.some((g) => g.toLowerCase() === genre.toLowerCase())
-		)
-		return filteredMovies
-			? res.json(filteredMovies)
-			: res.json({ message: 'No movies of this genre were found' })
-	}
+	const movies = await MovieModel.getAll({ genre })
 	res.json(movies)
 })
 
