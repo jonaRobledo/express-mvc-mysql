@@ -8,5 +8,4 @@
 // Leer un archivo JSON en ESModules - Recomendada
 import { createRequire } from 'node:module' // Importamos el creador de 'Require'
 const require = createRequire(import.meta.url) // Instanciamos un 'Require'
-
 export const readJSON = (path) => require(path)
