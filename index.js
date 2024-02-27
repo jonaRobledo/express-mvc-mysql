@@ -9,9 +9,7 @@ app.disable('x-powered-by')
 
 app.use(morgan('tiny'))
 app.use(json())
-//app.use(corsMiddleware())
-// Error en corsMiddleware que frena ejecucion del servidor
-// Resolver problema de rutas
+app.use(corsMiddleware())
 
 app.get('/', (req, res) => {
 	res.json({ message: 'Hello World!' })

@@ -1,5 +1,5 @@
 import { validateMovie, validatePartialMovie } from '../schemas/movies.js'
-import { MovieModel } from '../models/movies.js'
+import { MovieModel } from '../models/local-file-system/movies.js'
 
 export class MovieController {
 	static getAll = async (req, res) => {
@@ -10,10 +10,11 @@ export class MovieController {
 
 	static getById = async (req, res) => {
 		const { id } = req.params
-		const movie = await MovieModel.getById(id)
-		movie
-			? res.json(movie)
-			: res.status(404).json({ message: 'Movie not Found' })
+		const movie = await MovieModel.getById({ id })
+		if (movie) {
+			return res.json(movie)
+		}
+		res.status(404).json({ message: 'Movie not Found' })
 	}
 
 	static create = async (req, res) => {
