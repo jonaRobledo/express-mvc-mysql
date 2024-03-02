@@ -18,13 +18,10 @@ const movieSchema = z.object({
 		required_error: 'Movie director is required'
 	}),
 	duration: z.number().int().positive(),
-	rate: z.number().min(0).min(10).default(0),
-	poster: z
-		.string()
-		.url({
-			message: 'Movie poster must be a valid URL'
-		})
-		.endsWith('.jpg'),
+	rate: z.number().min(0).max(10).default(5),
+	poster: z.string().url({
+		message: 'Movie poster must be a valid URL'
+	}),
 	genre: z.array(
 		z.enum([
 			'Action',
