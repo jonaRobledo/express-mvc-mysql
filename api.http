@@ -16,8 +16,8 @@ Content-Type: application/json
     "year": 1972,
     "director": "Francis Ford Coppola",
     "duration": 175,
-    "posters": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
-    "genre": [
+    "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
+    "genres": [
         "Crime", 
         "Drama"
     ],
@@ -42,7 +42,7 @@ Content-Type: application/json
 }
 
 ### Eliminar una Película por ID
-DELETE http://localhost:3000/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
+DELETE http://localhost:3000/movies/0d39fca2-d9a9-11ee-8c77-54e1ad2334b2
 
 ### Eliminar una Película por ID que no Existe
 DELETE http://localhost:3000/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
