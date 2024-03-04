@@ -2,7 +2,7 @@
 GET http://localhost:3000/movies
 
 ### Recuperar una Película por ID
-GET http://localhost:3000/movies/5b73c650-d84d-11ee-8c77-54e1ad2334b2
+GET http://localhost:3000/movies/5fb9944c-d9e3-11ee-8c77-54e1ad2334b2
 
 ### Recuperar todas las Películas por un Genéro
 GET http://localhost:3000/movies?genre=action
@@ -34,7 +34,7 @@ Content-Type: application/json
 }
 
 ### Actualizar una Película por ID
-PATCH http://localhost:3000/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
+PATCH http://localhost:3000/movies/9d76ba8f-d9df-11ee-8c77-54e1ad2334b2
 Content-Type: application/json
 
 {
@@ -42,7 +42,7 @@ Content-Type: application/json
 }
 
 ### Eliminar una Película por ID
-DELETE http://localhost:3000/movies/0d39fca2-d9a9-11ee-8c77-54e1ad2334b2
+DELETE http://localhost:3000/movies/4386c447-d9e2-11ee-8c77-54e1ad2334b2
 
 ### Eliminar una Película por ID que no Existe
 DELETE http://localhost:3000/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
