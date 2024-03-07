@@ -2,7 +2,7 @@
 GET http://localhost:3000/movies
 
 ### Recuperar una Película por ID
-GET http://localhost:3000/movies/5fb9944c-d9e3-11ee-8c77-54e1ad2334b2
+GET http://localhost:3000/movies/9d76ba8f-d9df-11ee-8c77-54e1ad2334b2
 
 ### Recuperar todas las Películas por un Genéro
 GET http://localhost:3000/movies?genre=action
@@ -38,7 +38,17 @@ PATCH http://localhost:3000/movies/9d76ba8f-d9df-11ee-8c77-54e1ad2334b2
 Content-Type: application/json
 
 {
-    "year": 1994
+    "year": 2008,
+    "title": "The Dark Knight"
+}
+
+### Actualizar una Película con ID inexistente
+PATCH http://localhost:3000/movies/9d76ba8f-d9df-11ee-8c77-54e1ad2334b1
+Content-Type: application/json
+
+{
+    "year": 2008,
+    "title": "The Dark Knight"
 }
 
 ### Eliminar una Película por ID

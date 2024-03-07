@@ -31,7 +31,6 @@ export class MovieController {
 		if (result === false) {
 			return res.status(404).json({ message: 'Movie not Found' })
 		}
-		console.log(result)
 		return res.json({ message: 'Movie Deleted.' })
 	}
 
@@ -41,6 +40,8 @@ export class MovieController {
 		if (!result.success)
 			return res.status(400).json({ error: JSON.parse(result.error.message) })
 		const updatedMovie = await MovieModel.update({ id, input: result.data })
-		res.json(updatedMovie)
+		return updatedMovie
+			? res.json(updatedMovie)
+			: res.status(404).json({ message: 'Movie Not Found' })
 	}
 }

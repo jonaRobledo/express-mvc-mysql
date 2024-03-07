@@ -58,18 +58,16 @@ export class MovieModel {
 			duration,
 			director,
 			rate,
-			poster,
-			id
+			poster
 		} = input
 
 		// Generate UUID with mysql
-		const [uuidResult] = await connection.query('SELECT UUID() uuid;')
+		const [[{ uuid }]] = await connection.query('SELECT UUID() uuid;')
 
 		try {
-			console.log('create: ', input)
-			console.log(id, uuidResult)
+			console.log(uuid)
 			// Query for create Movie
-			/*await connection.query(
+			await connection.query(
 				'INSERT INTO movies (movie_id, title, year, director, duration, poster, rate) VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?)',
 				[uuid, title, year, director, duration, poster, rate]
 			)
@@ -84,12 +82,13 @@ export class MovieModel {
 					'INSERT INTO movie_genres (movie_id, genre_id) VALUES (UUID_TO_BIN(?), ?);',
 					[uuid, genre_id]
 				)
-			})*/
+			})
 		} catch (error) {
+			console.log(err)
 			throw new Error('Error creating movie')
 		}
 		// Search Movie created by UUID to return
-		/*const [movies] = await connection.query(
+		const [movies] = await connection.query(
 			'SELECT BIN_TO_UUID(movie_id) id, title, year, director, duration, poster, rate FROM movies WHERE movie_id = UUID_TO_BIN(?)',
 			[uuid]
 		)
@@ -100,50 +99,60 @@ export class MovieModel {
 		)
 		const movieGenres = []
 		getMovieGenres.forEach((genre) => movieGenres.push(genre.name))
-		return { ...movies[0], genres: movieGenres }*/ return {}
+		return { ...movies[0], genres: movieGenres }
 	}
 
 	static async delete({ id }) {
 		try {
-			await connection.query(
+			const [{ affectedRows }] = await connection.query(
 				'DELETE FROM movies WHERE movie_id = UUID_TO_BIN(?)',
 				[id]
 			)
-			await connection.query(
-				'DELETE FROM movie_genres WHERE movie_id = UUID_TO_BIN(?)',
-				[id]
-			)
+
+			if (affectedRows === 1) {
+				await connection.query(
+					'DELETE FROM movie_genres WHERE movie_id = UUID_TO_BIN(?)',
+					[id]
+				)
+			} else {
+				return false
+			}
 		} catch (err) {
+			console.log(err)
 			throw new Error('Error deleting movie')
 		}
 		return true
 	}
 
 	static async update({ id, input }) {
+		const { genres, title, year, duration, director, rate, poster } = input
 		try {
-			// Search Movie created by UUID to return
-			const [movies] = await connection.query(
-				'SELECT title, year, director, duration, poster, rate FROM movies WHERE movie_id = UUID_TO_BIN(?)',
-				[id]
+			const [{ affectedRows }] = await connection.query(
+				`UPDATE movies SET title = IFNULL(?, title), year = IFNULL(?, year),
+				duration = IFNULL(?, duration), poster = IFNULL(?, poster),
+				director = IFNULL(?, director), rate = IFNULL(?, rate)
+				WHERE movie_id = UUID_TO_BIN(?)`,
+				[title, year, duration, poster, director, rate, id]
 			)
-			// Search Genres relatione with Movie ID
-			const [getMovieGenres] = await connection.query(
-				'SELECT g.name FROM genres g JOIN movie_genres mg ON g.genre_id = mg.genre_id WHERE mg.movie_id = UUID_TO_BIN(?)',
-				[id]
-			)
-			const genre = []
-			getMovieGenres.forEach((movieGenre) => movieGenres.push(movieGenre.name))
-			const movie = { ...movies[0], ...genre }
-			const updateMovie = { id, ...movie, ...input }
-			console.log('update: ', updateMovie)
-			// Delete Movie and associated Genres
-			// this.delete({ id })
-			// Create a Movie with new Data
-
-			// ! Error with update movie
-			this.create({ updateMovie })
-		} catch (error) {
+			if (affectedRows === 0) {
+				return false
+			}
+		} catch (err) {
+			console.log(err)
 			throw new Error('Error updating movie')
 		}
+		// Search Movie updated by UUID to return
+		const [movies] = await connection.query(
+			'SELECT BIN_TO_UUID(movie_id) id, title, year, director, duration, poster, rate FROM movies WHERE movie_id = UUID_TO_BIN(?)',
+			[id]
+		)
+		// Search Genres relatione with Movie ID
+		const [getMovieGenres] = await connection.query(
+			'SELECT g.name FROM genres g JOIN movie_genres mg ON g.genre_id = mg.genre_id WHERE mg.movie_id = UUID_TO_BIN(?)',
+			[id]
+		)
+		const movieGenres = []
+		getMovieGenres.forEach((genre) => movieGenres.push(genre.name))
+		return { ...movies[0], genres: movieGenres }
 	}
 }
