@@ -2,7 +2,7 @@ import express, { json } from 'express'
 import morgan from 'morgan'
 import { corsMiddleware } from './middlewares/cors.js'
 import { createMovieRouter } from './routes/movies.js'
-import { MovieModel } from './models/mysql/movies.js'
+import 'dotenv/config'
 
 export const createApp = ({ movieModel }) => {
 	const app = express()
